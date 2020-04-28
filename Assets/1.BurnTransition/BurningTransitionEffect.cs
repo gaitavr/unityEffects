@@ -4,28 +4,21 @@ using UnityEngine;
 
 public class BurningTransitionEffect : MonoBehaviour
 {
-    [SerializeField]
-    private float _burningSpeed = 0.1f;
+    private Material _mat;
 
     private float _burningTime;
 
-    private Material _mat;
-
     private void Awake()
     {
-        var shader = Shader.Find("Hidden/BurningDev");
+        var shader = Shader.Find("Hidden/Burning");
         _mat = new Material(shader);
     }
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.R))
-        {
-            _burningTime = 0;
-        }
         _mat.SetFloat("_BurningTime", _burningTime);
-        _burningTime += Time.deltaTime * _burningSpeed;
-        if (_burningTime > 2)
+        _burningTime += Time.deltaTime * 0.5f;
+        if (_burningTime > 2f)
         {
             _burningTime = 0;
         }
