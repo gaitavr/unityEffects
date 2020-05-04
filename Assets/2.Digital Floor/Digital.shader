@@ -53,7 +53,17 @@
 			// 2D random numbers
 			float2 rand2(float2 p)
 			{
-				return frac(float2(sin(p.x * 591.32 + p.y * 154.077), cos(p.x * 391.32 + p.y * 49.077)));
+				float a = sin(p.x * 591.68 + p.y * 168.147);
+				float b = cos(p.x * 429.68 + p.y * 61.147);
+				return frac(float2(a, b));
+			}
+
+			// 2D random numbers
+			float2 rand21(float2 p)
+			{
+				float3 a = float3(p.xyx * float3(123.4, 234.52, 345.65));
+				a += dot(a, a + 34.45);
+				return frac(float2(a.x * a.y, a.y * 4512.24512));
 			}
 
 			// 1D noise
@@ -65,59 +75,51 @@
 			}
 
 			// voronoi distance noise, based on iq's articles
-			float voronoi(float2 x)
+			float voronoi(float2 uv)
 			{
-				float2 p = floor(x);
-				float2 f = frac(x);
+				float2 id = floor(uv);
+				float2 gv = frac(uv);
 
-				float2 res = 8.0;
-				for (int j = -1; j <= 1; j++)
+				float minD1 = 1000; 
+				float minD2 = 1000;
+				for (int y = -1; y <= 1; y++)
 				{
-					for (int i = -1; i <= 1; i++)
+					for (int x = -1; x <= 1; x++)
 					{
-						float2 b = float2(i, j);
-						float2 r = float2(b) - f + rand2(p + b);
-
-						// chebyshev distance, one of many ways to do this
-						float d = max(abs(r.x), abs(r.y));
-
-						if (d < res.x)
+						float2 offset = float2(x, y);
+						float rnd = rand2(id + offset);
+						float2 p = offset - gv + rnd;
+						float d = max(abs(p.x), abs(p.y));
+						if (d < minD1)
 						{
-							res.y = res.x;
-							res.x = d;
+							minD2 = minD1;
+							minD1 = d;
 						}
-						else if (d < res.y)
+						else if (d < minD2)
 						{
-							res.y = d;
+							minD2 = d;
 						}
 					}
 				}
-				return res.y - res.x;
+				return minD2 - minD1;
 			}
 
 			fixed4 frag(v2f i) : SV_Target
 			{
-				float flicker = noise1(_Time.y) * 0.8 + 0.4;
+				float flicker = noise1(_Time.y) * 0.8 + 0.4;//Translate to script, use fmod or something
 				
 				float2 uv = i.uv;
 				uv = (uv - 0.5) * 10.0;
 
-				float t = 0;
-
-				
-				for (int i = 0; i < 3; i++)
-				{
-
-				}
-				return float4(t, t, t, 1.0);
-
+				float t = voronoi(uv);
+				float3 col = t;
+				//return float4(col, 1.0);
 				float v = 0.0;
-
 				float a = 0.6, f = 1.0;//a - brigtness, f = noise granules
 
 				for (int i = 0; i < 3; i++) // 4 octaves also look nice, its getting a bit slow though
 				{
-					float v1 = voronoi(uv * f + 5.0);
+					float v1 = voronoi(uv * f);
 					float v2 = 0.0;
 
 					// make the moving electrons-effect for higher octaves
@@ -139,16 +141,14 @@
 					v2 = a * (noise1(v1 * 5.5 + 0.1));
 
 					// octave 0's intensity changes a bit
-					if (i == 0)
-						v += v2 * flicker;
-					else
-						v += v2;
+					if (i == 0) v += v2 * flicker;
+					else v += v2;
 
 					f *= 3.0;
 					a *= 0.7;
 				}
 
-				float3 col = v * float3(0.8, 0.1, 0.5) * 1.5;
+				col = v;// * 1.5 *float3(0.8, 0.1, 0.5);
 				return float4(col, 1.0);
             }
             ENDCG
