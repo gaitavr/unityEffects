@@ -3,6 +3,7 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_BaseColor("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -34,6 +35,7 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+			float4 _BaseColor;
 
             v2f vert (appdata v)
             {
@@ -115,27 +117,6 @@
 				float v = 0.0;
 				float a = 0.8, f = 3.0;//a - amplitude, f = frequency
 
-				float3 test = 0;
-
-				//octave 1
-				if (true)
-				{
-					float v1 = voronoi(uv * f);
-					float v2 = voronoi(uv * f * 0.3 + _Time.y);
-
-					float va = 0.0, vb = 0.0;
-					va = 1.0 - smoothstep(0.0, 0.1, v1);
-					vb = 1.0 - smoothstep(0.0, 0.08, v2);
-					test.rgb = float3(1,0,0) * a * pow(va * (0.5 + vb), 2);
-
-					v1 = 1.0 - smoothstep(0.0, 0.3, v1);
-					v2 = a * (noise1(v1 * 5.5 + 0.1));
-					test.r += v2;
-				}
-
-				col = v;
-				return float4(test, 1.0);
-
 				for (int i = 0; i < 3; i++) // 4 octaves also look nice, its getting a bit slow though
 				{
 					float v1 = voronoi(uv * f);
@@ -147,9 +128,9 @@
 						v2 = voronoi(uv * f  * 0.3 + _Time.y);
 
 						float va = 0.0, vb = 0.0;
-						va = 1.0 - smoothstep(0.0, 0.1, v1);
-						vb = 1.0 - smoothstep(0.0, 0.08, v2);
-						v += a * pow(va * (0.5 + vb), 2.0);
+						va = 1.0 - smoothstep(0.0, 0.15, v1);
+						vb = 1.0 - smoothstep(0.0, 0.18, v2);
+						v += 5.0 * a * pow(va * (0.5 + vb), 2.0);
 					}
 
 					// make sharp edges
@@ -166,7 +147,7 @@
 					a *= 0.5;
 				}
 
-				col = v;// *float3(0.3, 0.1, 0.5);
+				col = v * _BaseColor;
 				return float4(col, 1.0);
             }
             ENDCG
