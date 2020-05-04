@@ -110,12 +110,31 @@
 				
 				float2 uv = i.uv;
 				uv = (uv - 0.5) * 10.0;
+				float3 col = 0;
 
-				float t = voronoi(uv);
-				float3 col = t;
-				//return float4(col, 1.0);
 				float v = 0.0;
-				float a = 0.6, f = 1.0;//a - brigtness, f = noise granules
+				float a = 0.8, f = 3.0;//a - amplitude, f = frequency
+
+				float3 test = 0;
+
+				//octave 1
+				if (true)
+				{
+					float v1 = voronoi(uv * f);
+					float v2 = voronoi(uv * f * 0.3 + _Time.y);
+
+					float va = 0.0, vb = 0.0;
+					va = 1.0 - smoothstep(0.0, 0.1, v1);
+					vb = 1.0 - smoothstep(0.0, 0.08, v2);
+					test.rgb = float3(1,0,0) * a * pow(va * (0.5 + vb), 2);
+
+					v1 = 1.0 - smoothstep(0.0, 0.3, v1);
+					v2 = a * (noise1(v1 * 5.5 + 0.1));
+					test.r += v2;
+				}
+
+				col = v;
+				return float4(test, 1.0);
 
 				for (int i = 0; i < 3; i++) // 4 octaves also look nice, its getting a bit slow though
 				{
@@ -125,8 +144,7 @@
 					// make the moving electrons-effect for higher octaves
 					if (i > 0)
 					{
-						// of course everything based on voronoi
-						v2 = voronoi(uv * f * 0.5 + 50.0 + _Time.y);
+						v2 = voronoi(uv * f  * 0.3 + _Time.y);
 
 						float va = 0.0, vb = 0.0;
 						va = 1.0 - smoothstep(0.0, 0.1, v1);
@@ -138,17 +156,17 @@
 					v1 = 1.0 - smoothstep(0.0, 0.3, v1);
 
 					// noise is used as intensity map
-					v2 = a * (noise1(v1 * 5.5 + 0.1));
+					v2 = a * (noise1(v1 * 5));
 
 					// octave 0's intensity changes a bit
 					if (i == 0) v += v2 * flicker;
 					else v += v2;
 
 					f *= 3.0;
-					a *= 0.7;
+					a *= 0.5;
 				}
 
-				col = v;// * 1.5 *float3(0.8, 0.1, 0.5);
+				col = v;// *float3(0.3, 0.1, 0.5);
 				return float4(col, 1.0);
             }
             ENDCG
