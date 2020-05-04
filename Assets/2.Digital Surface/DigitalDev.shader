@@ -1,4 +1,4 @@
-﻿Shader "Unlit/Digital"
+﻿Shader "Unlit/DigitalDev"
 {
     Properties
     {
@@ -15,8 +15,6 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -29,7 +27,6 @@
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
@@ -42,17 +39,14 @@
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
-			// 1D random numbers
 			float rand(float n)
 			{
 				return frac(sin(n) * 43758.5453123);
 			}
 
-			// 2D random numbers
 			float2 rand2(float2 p)
 			{
 				float a = sin(p.x * 591.68 + p.y * 168.147);
@@ -60,15 +54,6 @@
 				return frac(float2(a, b));
 			}
 
-			// 2D random numbers
-			float2 rand21(float2 p)
-			{
-				float3 a = float3(p.xyx * float3(123.4, 234.52, 345.65));
-				a += dot(a, a + 34.45);
-				return frac(float2(a.x * a.y, a.y * 4512.24512));
-			}
-
-			// 1D noise
 			float noise1(float p)
 			{
 				float fl = floor(p);
@@ -76,7 +61,6 @@
 				return lerp(rand(fl), rand(fl + 1.0), fc);
 			}
 
-			// voronoi distance noise, based on iq's articles
 			float voronoi(float2 uv)
 			{
 				float2 id = floor(uv);
