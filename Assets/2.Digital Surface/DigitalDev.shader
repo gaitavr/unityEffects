@@ -47,13 +47,6 @@
 				return frac(sin(n) * 43758.5453123);
 			}
 
-			float2 rand2(float2 p)
-			{
-				float a = sin(p.x * 591.68 + p.y * 168.147);
-				float b = cos(p.x * 429.68 + p.y * 61.147);
-				return frac(float2(a, b));
-			}
-
 			float noise1(float p)
 			{
 				float fl = floor(p);
@@ -61,10 +54,25 @@
 				return lerp(rand(fl), rand(fl + 1.0), fc);
 			}
 
+
+			float2 rand2(float2 p)
+			{
+				float a = sin(p.x * 591.68 + p.y * 168.147);
+				float b = cos(p.x * 429.68 + p.y * 61.147);
+				return frac(float2(a, b));
+			}
+
+			float2 rand21(float2 p)
+			{
+				float3 a = frac(p.xyx * float3(123.4, 234.52, 345.65));
+				a += dot(a, a + 34.45);
+				return frac(float2(a.x * a.y, a.y * a.z));
+			}
+
 			float voronoi(float2 uv)
 			{
 				float2 id = floor(uv);
-				float2 gv = frac(uv);
+				float2 gv = frac(uv) - 0.5;
 
 				float minD1 = 1000; 
 				float minD2 = 1000;
@@ -92,14 +100,15 @@
 
 			fixed4 frag(v2f i) : SV_Target
 			{
-				float flicker = noise1(_Time.y) * 0.8 + 0.4;//Translate to script, use fmod or something
 				
 				float2 uv = i.uv;
-				uv = (uv - 0.5) * 10.0;
+				uv = (uv - 0.5) * 20.0;
 				float3 col = 0;
 
 				float v = 0.0;
-				float a = 0.8, f = 3.0;//a - amplitude, f = frequency
+				float a = 0.8, f = 1.0;//a - amplitude, f = frequency
+
+				float flicker = noise1(_Time.y) * 0.8 + 0.4;
 
 				for (int i = 0; i < 3; i++) // 4 octaves also look nice, its getting a bit slow though
 				{
@@ -114,7 +123,7 @@
 						float va = 0.0, vb = 0.0;
 						va = 1.0 - smoothstep(0.0, 0.15, v1);
 						vb = 1.0 - smoothstep(0.0, 0.18, v2);
-						v += 5.0 * a * pow(va * (0.5 + vb), 2.0);
+						v += 5.0 * a * pow(va * vb, 2.0);
 					}
 
 					// make sharp edges
@@ -130,7 +139,7 @@
 					f *= 3.0;
 					a *= 0.5;
 				}
-
+				
 				col = v * _BaseColor;
 				return float4(col, 1.0);
             }

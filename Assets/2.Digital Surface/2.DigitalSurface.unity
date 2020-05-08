@@ -302,7 +302,7 @@ Transform:
   m_GameObject: {fileID: 1642309435}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -320,8 +320,8 @@ GameObject:
   - component: {fileID: 1997616059}
   - component: {fileID: 1997616058}
   - component: {fileID: 1997616057}
-  - component: {fileID: 1997616062}
   - component: {fileID: 1997616063}
+  - component: {fileID: 1997616062}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -336,7 +336,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1997616056}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ecd4d689606098c438a39e07b1e95bc3, type: 3}
   m_Name: 
@@ -424,8 +424,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 31.59, y: 0, z: 0}
---- !u!135 &1997616062
-SphereCollider:
+--- !u!136 &1997616062
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -434,8 +434,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 3
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1997616063
 MonoBehaviour:
