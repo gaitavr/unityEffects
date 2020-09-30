@@ -25,15 +25,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Brightness: 0.0015
-    - _Darkness: 0.3
+    - _Darkness: 0.613
     - _DistFading: 0.73
+    - _Fog: 3.67
     - _FormulaCoefficient: 0.53
     - _Iterations: 15
-    - _Saturation: 1.02
-    - _Speed: 0.22
-    - _StepSize: 0.129
+    - _Saturation: 1
+    - _Speed: 1
+    - _StepSize: 0.1
     - _Test: 1
     - _Tile: 1
-    - _VolumeSteps: 15
-    - _Zoom: 1
+    - _VolumeSteps: 11.5
+    - _Zoom: 8.18
     m_Colors: []
