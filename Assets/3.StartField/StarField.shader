@@ -97,7 +97,7 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float2 uv = i.uv - 0.5;
+                float2 uv = i.uv;
                 float3 dir = float3(uv * _Zoom, 1.0);
                 dir = rotate(dir);
                 
@@ -122,7 +122,7 @@
                         a += abs(length(p) - pa); // absolute sum of average change
                         pa = length(p);
                     }
-
+                   
                     if (r > 6) fade *= 1.0 - max(0.0, _Darkness - a * a * 0.001); // dark matter, don't render near
                         
                     a *= a * a; // add contrast
