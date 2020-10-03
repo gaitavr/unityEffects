@@ -30,15 +30,18 @@ Material:
     m_Floats:
     - _Brightness: 0.0015
     - _Darkness: 0.613
+    - _DirectionX: -0.28
+    - _DirectionY: 0.65
     - _DistFading: 0.872
     - _Fog: 3.67
     - _FormulaCoefficient: 0.53
     - _Iterations: 15
     - _Saturation: 1
-    - _Speed: 0.287
+    - _Speed: 0.633
     - _StepSize: 0.1
     - _Test: 1
     - _Tile: 1
     - _VolumeSteps: 11.5
     - _Zoom: 2.94
-    m_Colors: []
+    m_Colors:
+    - _Direction: {r: 1, g: 1, b: 0, a: 0}

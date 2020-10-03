@@ -10,6 +10,8 @@
         _Zoom("Zoom", Range(0.1, 10)) = 1.8
         _Tile("Tile", Range(0.2, 5)) = 0.85
         _Speed("Speed", Range(0.0, 1.0)) = 0.05
+        _DirectionX("DirectionX", Range(-1, 1)) = 0
+        _DirectionY("DirectionY", Range(-1, 1)) = 0
         _Brightness("Brightness", Range(0.0, 0.01)) = 0.0015
         _Darkness("Darkness", Range(0.0, 1)) = 0.3
         _DistFading("Fading", Range(0.1, 1)) = 0.73
@@ -52,6 +54,8 @@
             float _Zoom;
             float _Tile;
             float _Speed;
+            float _DirectionX;
+            float _DirectionY;
             
             float _Brightness;
             float _Darkness;
@@ -73,11 +77,11 @@
             static float2x2 _rotation1 = float2x2(_cos30, _sin30, -_sin30, _cos30);
             static float2x2 _rotation2 = float2x2(_cos45, _sin45, -_sin45, _cos45);
 
-            float3 rotate(float3 dir)
+            float3 rotate(float3 p)
             {
-                dir.xz = mul(_rotation1, dir.xz);
-                dir.xy = mul(_rotation2, dir.xy); 
-                return dir;
+                p.xz = mul(_rotation1, p.xz);
+                p.xy = mul(_rotation2, p.xy); 
+                return p;
             }
 
             float mod(float x, float y)
@@ -98,13 +102,13 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 uv = i.uv;
-                float3 dir = float3(uv * _Zoom, 1.0);
-                dir = rotate(dir);
+                uv.y *= _ScreenParams.y/_ScreenParams.x;
+                float3 pos = float3(uv * _Zoom, 1.0);
+                pos = rotate(pos);
                 
                 float time = mod(_Time.y * _Speed, 7200);
-                float3 from = float3(1, 0.5, 0.5);
-                from += float3(time * 2.0, time, -1.0);
-                from = rotate(from);
+                float3 dir = float3(time * _DirectionX, time * _DirectionY, 0.0);
+                dir = rotate(dir);
 
                 //volumetric rendering
                 float distance = 0.1, fade = 1.0;
@@ -112,7 +116,7 @@
                 
                 for (int r = 0; r < _VolumeSteps; r++) 
                 {
-                    float3 p = from + distance * dir;
+                    float3 p = dir + distance * pos;
                     p = abs(_Tile - mod3(p, _Tile * 2.0)); // tiling fold
                     
                     float pa = 0.0, a = 0.0;
