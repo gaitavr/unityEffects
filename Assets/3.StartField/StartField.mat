@@ -23,25 +23,18 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Noise:
-        m_Texture: {fileID: 2800000, guid: f7bbd413d388ebd47b05f0b514034a70, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Brightness: 0.0015
-    - _Darkness: 0.613
-    - _DirectionX: -0.28
-    - _DirectionY: 0.65
-    - _DistFading: 0.872
-    - _Fog: 3.67
-    - _FormulaCoefficient: 0.53
-    - _Iterations: 15
-    - _Saturation: 1
-    - _Speed: 0.633
+    - _Coefficient: 0.53
+    - _Darkness: 0.3
+    - _DirectionX: 0
+    - _DirectionY: 0
+    - _DistFading: 0.73
+    - _Iterations: 13
+    - _Saturation: 0.85
+    - _Speed: 0.05
     - _StepSize: 0.1
-    - _Test: 1
-    - _Tile: 1
-    - _VolumeSteps: 11.5
-    - _Zoom: 2.94
-    m_Colors:
-    - _Direction: {r: 1, g: 1, b: 0, a: 0}
+    - _Tile: 0.85
+    - _VolumeSteps: 15
+    - _Zoom: 1.8
+    m_Colors: []
